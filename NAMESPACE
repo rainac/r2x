@@ -1,1 +1,2 @@
 exportPattern("^r2x.*$")
+exportPattern("^x2r.*$")

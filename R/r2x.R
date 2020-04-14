@@ -41,3 +41,40 @@ r2x <- function(obj, name='r2x') {
     s <- c(s, sprintf('</%s>', tag))
     paste0(s, collapse='')
 }
+
+
+xsltproc <- function(xslurl, xmlurl) {
+    xslfurl <- system.file(sprintf("xsl/%s", xslurl), package = "r2x")
+    xsldoc <- read_xml(xslfurl)
+    if ('xml_document' %in% class(xmlurl)) {
+        xdoc   <- xmlurl
+        xmlurl <- '<document>'
+    } else {
+        xdoc   <- read_xml(xmlurl)
+    }
+
+    res <- xml_xslt(xdoc, xsldoc)
+    res
+}
+
+xsltcodeeval <- function(xsl, xml) {
+    code <- xsltproc(xsl, xml)
+    show(code)
+    estr <- NULL
+    local({
+        tryCatch({
+            e <- eval(parse(text=code))
+            estr <<- e
+        }, error = function(e) {
+            cat(sprintf('error: %s in code %s\n', e, code))
+        })
+    })
+    estr
+}
+
+x2r <- function(doc) {
+    if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
+        doc <- read_xml(doc)
+    }
+    xsltcodeeval('to-R-structure-txt.xsl', doc)
+}
