@@ -42,4 +42,6 @@ test_that("test r2x", {
               paste(deparse(y2),collapse='')))
   expect_true(identical(y1, y2))
   expect_true(TRUE)
+  z <- read_xml(r2x(y1))
+  expect_true(identical(y1, x2r(z)))
 })

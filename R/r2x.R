@@ -10,7 +10,7 @@ renderval <- function(obj) {
 
 r2x <- function(obj, name='r2x') {
     tag <- sprintf('%s', name)
-    s <- sprintf('<%s class="%s"', tag, class(obj))
+    s <- sprintf('<%s', tag, class(obj))
     fullnames <- names(obj)
     fullnames <- lapply(fullnames, function(n) {
         if (nchar(n) == 0) tag
@@ -35,7 +35,7 @@ r2x <- function(obj, name='r2x') {
         })
         s <- c(s, paste0(subs, collapse=''))
     } else {
-        s <- c(s, sprintf('>'))
+        s <- c(s, sprintf(' class="%s">', class(obj)))
         s <- c(s, renderval(obj))
     }
     s <- c(s, sprintf('</%s>', tag))
@@ -59,7 +59,6 @@ xsltproc <- function(xslurl, xmlurl) {
 
 xsltcodeeval <- function(xsl, xml) {
     code <- xsltproc(xsl, xml)
-    show(code)
     estr <- NULL
     local({
         tryCatch({
