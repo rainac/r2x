@@ -45,3 +45,12 @@ test_that("test r2x", {
   z <- read_xml(r2x(y1))
   expect_true(identical(y1, x2r(z)))
 })
+
+test_that("test r2x", {
+  l <- list(a=1,b=2,c='test')
+  l <- list(a=list(),a=1,b=2,b=list(),c=l)
+  x <- r2x(l)
+  doc <- read_xml(x)
+  y1 <- x2r(x)
+  expect_true(TRUE)
+})
