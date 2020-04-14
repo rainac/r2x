@@ -8,9 +8,17 @@ renderval <- function(obj) {
     }
 }
 
-r2x <- function(obj, name='r2x') {
+r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
     tag <- sprintf('%s', name)
     s <- sprintf('<%s', tag, class(obj))
+    if (!is.null(namespace)) {
+        s <- c(s, sprintf(' xmlns="%s"', namespace))
+    }
+    if (length(namespaces)>0) {
+        s <- c(s, ' ', paste(lapply(names(namespaces), function(n) sprintf('xmlns:%s', n)),
+                             lapply(namespaces, function(n) sprintf('"%s"', n)),
+                             collapse=' ', sep='='))
+    }
     fullnames <- names(obj)
     fullnames <- lapply(fullnames, function(n) {
         if (nchar(n) == 0) tag
