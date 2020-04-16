@@ -57,15 +57,15 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
 
 xsltproc <- function(xslurl, xmlurl) {
     xslfurl <- system.file(sprintf("xsl/%s", xslurl), package = "r2x")
-    xsldoc <- read_xml(xslfurl)
+    xsldoc <- xml2::read_xml(xslfurl)
     if ('xml_document' %in% class(xmlurl)) {
         xdoc   <- xmlurl
         xmlurl <- '<document>'
     } else {
-        xdoc   <- read_xml(xmlurl)
+        xdoc   <- xml2::read_xml(xmlurl)
     }
 
-    res <- xml_xslt(xdoc, xsldoc)
+    res <- xslt::xml_xslt(xdoc, xsldoc)
     res
 }
 
@@ -85,7 +85,7 @@ xsltcodeeval <- function(xsl, xml) {
 
 x2r <- function(doc) {
     if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
-        doc <- read_xml(doc)
+        doc <- xml2::read_xml(doc)
     }
     xsltcodeeval('to-R-structure-txt.xsl', doc)
 }
