@@ -83,9 +83,22 @@ xsltcodeeval <- function(xsl, xml) {
     estr
 }
 
+postprocess <- function(l) {
+    if (is.list(l)) {
+        lapply(l, postprocess)
+    } else {
+        if (suppressWarnings(!is.na(as.numeric(l)))) {
+            as.numeric(l)
+        } else {
+            l
+        }
+    }
+}
+
 x2r <- function(doc) {
     if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
         doc <- xml2::read_xml(doc)
     }
-    xsltcodeeval('to-R-structure-txt.xsl', doc)
+    l <- xsltcodeeval('to-R-structure-txt.xsl', doc)
+    l <- postprocess(l)
 }
