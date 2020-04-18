@@ -94,9 +94,9 @@ postprocess <- function(l) {
     atts <- attributes(l)
     if (!is.null(atts)) {
         rem <- names(atts) %in% c('class')
-        attributes(l) <- atts[!rem]
+        atts <- atts[!rem]
     }
-    if (is.list(l)) {
+    l <- if (is.list(l)) {
         lapply(l, postprocess)
     } else {
         if (suppressWarnings(!is.na(as.numeric(l)))) {
@@ -105,6 +105,10 @@ postprocess <- function(l) {
             l
         }
     }
+    if (!is.null(atts)) {
+        attributes(l) <- atts
+    }
+    l
 }
 
 x2r <- function(doc) {
