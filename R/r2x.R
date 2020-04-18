@@ -8,6 +8,25 @@ renderval <- function(obj) {
           }, collapse=' ')
 }
 
+#' Convert a named list to an XML document
+#'
+#' Convert a named list directly to an XML document. The list names
+#' are converted to XML element names. Attributes are mapped to XML
+#' attributes.
+#'
+#' The conversion is done by generating XML text directly, without the
+#' use of any other package. If a parsed XML document is desired use
+#' read_xml().
+#'
+#' @param obj A named list
+#' @param name The name of the top-level element
+#' @param namespace Set namespace URI of XML elements
+#' @param namespaces Named list of namespace URIs for name prefixes
+#' @return XML document in text form.
+#' @examples
+#' mylist <- list(a=list(b=1,b=2.0))
+#' doctext <- r2x(mylist)
+#' doc <- read_xml(doctext)
 r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
     tag <- sprintf('%s', name)
     s <- sprintf('<%s', tag, class(obj))
@@ -111,6 +130,23 @@ postprocess <- function(l) {
     l
 }
 
+#' Convert XML document to named list
+#'
+#' Convert an XML document to a named list directly. This is possible
+#' since names in lists may occur repeatedly. XML attributes are
+#' mapped to R attributes.
+#'
+#' The conversion is done by a XSL transformation generating R code
+#' which is parse()'d and eval()'d, which is why the xslt package is
+#' required.
+#'
+#' @param doc An XML document in parsed or text form.
+#' @return A named list representing the document.
+#' @examples
+#' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
+#' x2r(doctext)
+#' doc <- read_xml(doctext)
+#' x2r(doc)
 x2r <- function(doc) {
     if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
         doc <- xml2::read_xml(doc)

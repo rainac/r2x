@@ -11,3 +11,4 @@ Description: R2X is a simple R to XML bridge. Named lists are
  they are plain values. XML documents are converted to named lists by
  the x2r function.
 Depends: xml2, xslt
+RoxygenNote: 7.0.2
