@@ -1,2 +1,4 @@
 exportPattern("^r2x.*$")
 exportPattern("^x2r.*$")
+importFrom("xml2", "read_xml")
+importFrom("xslt", "xml_xslt")
