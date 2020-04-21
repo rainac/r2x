@@ -12,3 +12,4 @@ Description: R2X is a simple R to XML bridge. Named lists are
  the x2r function.
 Depends: xml2, xslt
 RoxygenNote: 7.0.2
+Encoding: UTF-8
