@@ -2,7 +2,7 @@ renderval <- function(obj) {
     paste(if (is.character(obj)) {
               sprintf('%s', obj)
           } else if (is.numeric(obj)) {
-              sprintf('%g', obj)
+              sprintf('%.16g', obj)
           } else {
               sprintf('%s', obj)
           }, collapse=' ')
