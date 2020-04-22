@@ -118,8 +118,10 @@ postprocess <- function(l) {
     l <- if (is.list(l)) {
         lapply(l, postprocess)
     } else {
-        if (suppressWarnings(!is.na(as.numeric(l)))) {
-            as.numeric(l)
+        tlist <- strsplit(l, ' ')[[1]]
+        vlist <- suppressWarnings(as.numeric(tlist))
+        if (!any(is.na(vlist))) {
+            vlist
         } else {
             l
         }
