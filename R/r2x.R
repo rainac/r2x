@@ -8,20 +8,21 @@ renderval <- function(obj) {
           }, collapse=' ')
 }
 
-#' Convert a named list to an XML document
+#' Convert named list to XML document
 #'
-#' Convert a named list directly to an XML document. The list names
+#' Converts a named list directly to an XML document. The list names
 #' are converted to XML element names. Attributes are mapped to XML
 #' attributes.
 #'
-#' The conversion is done by generating XML text directly, without the
-#' use of any other package. If a parsed XML document is desired use
-#' read_xml().
+#' The conversion is done by generating XML text directly. If a parsed
+#' XML document is desired use read_xml().
 #'
-#' @param obj A named list
-#' @param name The name of the top-level element
-#' @param namespace Set namespace URI of XML elements
-#' @param namespaces Named list of namespace URIs for name prefixes
+#' The inverse operation is called x2r.
+#'
+#' @param obj Named list
+#' @param name Name of the top-level element
+#' @param namespace Set namespace URI of XML elements in the default namespace
+#' @param namespaces Named list of namespace URIs for setting namespace prefixes
 #' @return XML document in text form.
 #' @examples
 #' mylist <- list(a=list(b=1,b=2.0))
@@ -134,16 +135,18 @@ postprocess <- function(l) {
 
 #' Convert XML document to named list
 #'
-#' Convert an XML document to a named list directly. This is possible
-#' since names in lists may occur repeatedly. XML attributes are
-#' mapped to R attributes.
+#' Converts an XML document to a named list directly. This is done by
+#' naming the elements the same as the names of the list. XML
+#' attributes are mapped to R attributes.
 #'
-#' The conversion is done by a XSL transformation generating R code
-#' which is parse()'d and eval()'d, which is why the xslt package is
-#' required.
+#' The conversion is done by an XSLT stylesheet, which is why the xslt
+#' package is required. The XSLT generates the R code of the document
+#' structure, which is sourced.
 #'
-#' @param doc An XML document in parsed or text form.
-#' @return A named list representing the document.
+#' The inverse operation is called r2x.
+#'
+#' @param doc XML document in parsed or text form.
+#' @return Named list representing the document.
 #' @examples
 #' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
 #' x2r(doctext)
