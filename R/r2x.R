@@ -171,12 +171,17 @@ postprocess <- function(l) {
 #' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
 #' doc <- read_xml(doctext)
 #' r2x_deparse(doc)
-r2x_deparse <- function(doc) {
-    if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
-        doc <- xml2::read_xml(doc)
+r2x_deparse <- function(expr, width.cutoff = 60L,
+                        backtick = mode(expr) %in% c("call", "expression", "(", "function"),
+                        control = c("keepNA", "keepInteger", "niceNames", "showAttributes"),
+                        nlines = -1L) {
+    if (is.character(expr) && nchar(expr) < 1000 && file.exists(expr)) {
+        expr <- xml2::read_xml(expr)
     }
-    xsltproc('to-R-structure-txt.xsl', doc)
+    xsltproc('to-R-structure-txt.xsl', expr)
 }
+
+setMethod('deparse', signature(expr='xml_document'), r2x_deparse)
 
 #' Convert XML document to named list
 #'
