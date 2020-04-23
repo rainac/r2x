@@ -132,7 +132,7 @@ postprocess <- function(l) {
     atts <- attributes(l)
     if (!is.null(atts)) {
         rem <- names(atts) %in% c('class')
-        atts <- atts[!rem]
+        atts <- lapply(atts[!rem], postprocess)
     }
     l <- if (is.list(l)) {
         lapply(l, postprocess)
