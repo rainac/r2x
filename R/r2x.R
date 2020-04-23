@@ -93,7 +93,7 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
 #'  l <- element(a=1,b=2,c='test',
 #'               val='This is a test')
 element <- seta <- function(..., val) {
-    if (missing(val)) val <- numeric(0)
+    if (missing(val)) val <- ''
     r <- val
     alist <- list(...)
     attributes(r) <- append(attributes(r), alist)
@@ -136,7 +136,7 @@ postprocess <- function(l) {
     }
     l <- if (is.list(l)) {
         lapply(l, postprocess)
-    } else {
+    } else if (length(l) == 1 && nchar(l) > 0) {
         tlist <- strsplit(l, ' ')[[1]]
         vlist <- suppressWarnings(as.numeric(tlist))
         if (!any(is.na(vlist))) {
@@ -144,6 +144,8 @@ postprocess <- function(l) {
         } else {
             l
         }
+    } else {
+        l
     }
     if (!is.null(atts)) {
         attributes(l) <- atts
