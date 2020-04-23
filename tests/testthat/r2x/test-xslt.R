@@ -49,6 +49,7 @@ test_that("test r2x xslt transform", {
     xml_doc <- read_xml(r2x(example_xml))
     result <- xml_xslt(xml_doc, xslt_doc)
 
-    identical(r2x_deparse(xml_doc),
-              r2x_deparse(result))
+    expect_true(identical(r2x_deparse(xml_doc),
+                          r2x_deparse(result)))
+
 })
