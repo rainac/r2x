@@ -14,27 +14,27 @@
   </xsl:template>
 
   <xsl:template match="*">
-    <xsl:value-of select="local-name()"/> &lt;- <xsl:apply-templates select="." mode="in-list"/>
+    <xsl:value-of select="name()"/> &lt;- <xsl:apply-templates select="." mode="in-list"/>
   </xsl:template>
 
   <xsl:template match="*" mode="in-list">list(<xsl:for-each select="*">
       <xsl:if test="position() > 1">, </xsl:if>
-      `<xsl:value-of select="local-name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>
+      `<xsl:value-of select="name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>
     )</xsl:template>
 
   <xsl:template match="*[count(@*)>0]" mode="in-list">element(<xsl:for-each select="@*">
-    <xsl:if test="position() > 1">, </xsl:if>`<xsl:value-of select="local-name()"/>` = '<xsl:value-of
+    <xsl:if test="position() > 1">, </xsl:if>`<xsl:value-of select="name()"/>` = '<xsl:value-of
       select="normalize-space(.)"/>'</xsl:for-each>,
             val = list(<xsl:for-each select="*">
        <xsl:if test="position() > 1">, </xsl:if>
-       `<xsl:value-of select="local-name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>))</xsl:template>
+       `<xsl:value-of select="name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>))</xsl:template>
 
   <xsl:template match="*[count(*)=0]"
                 mode="in-list">'<xsl:value-of select="normalize-space(.)"/>'</xsl:template>
 
   <xsl:template match="*[count(*)=0 and count(@*)>0]" mode="in-list">element(<xsl:for-each select="@*">
               <xsl:if test="position() > 1">, </xsl:if>`<xsl:value-of
-              select="local-name()"/>` = '<xsl:value-of select="normalize-space(.)"/>'</xsl:for-each>,
+              select="name()"/>` = '<xsl:value-of select="normalize-space(.)"/>'</xsl:for-each>,
             val = '<xsl:value-of select="normalize-space(.)"/>')</xsl:template>
 
 </xsl:stylesheet>
