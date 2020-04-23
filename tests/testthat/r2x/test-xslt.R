@@ -52,4 +52,6 @@ test_that("test r2x xslt transform", {
     expect_true(identical(r2x_deparse(xml_doc),
                           r2x_deparse(result)))
 
+    expect_true(identical(example_xml,
+                          x2r(result)))
 })
