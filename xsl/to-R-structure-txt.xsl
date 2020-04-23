@@ -10,11 +10,7 @@
   <xsl:template match="text()"/>
 
   <xsl:template match="/">
-    <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="*">
-    <xsl:value-of select="name()"/> &lt;- <xsl:apply-templates select="." mode="in-list"/>
+    <xsl:apply-templates mode="in-list"/>
   </xsl:template>
 
   <xsl:template match="*" mode="in-list">list(<xsl:for-each select="*">
