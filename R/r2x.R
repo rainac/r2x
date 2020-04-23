@@ -93,6 +93,7 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
 #'  l <- element(a=1,b=2,c='test',
 #'               val='This is a test')
 element <- seta <- function(..., val) {
+    if (missing(val)) val <- numeric(0)
     r <- val
     alist <- list(...)
     attributes(r) <- append(attributes(r), alist)
