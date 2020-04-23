@@ -69,7 +69,7 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
             s <- c(s, paste0(subs, collapse=''))
         }
     } else {
-        s <- c(s, sprintf(' class="%s" %s>', class(obj), attrstr))
+        s <- c(s, sprintf(' %s>', attrstr))
         s <- c(s, renderval(obj))
     }
     s <- c(s, sprintf('</%s>', tag))
@@ -131,7 +131,7 @@ xsltcodeeval <- function(xsl, xml) {
 postprocess <- function(l) {
     atts <- attributes(l)
     if (!is.null(atts)) {
-        rem <- names(atts) %in% c('class')
+        rem <- names(atts) %in% c()
         atts <- lapply(atts[!rem], postprocess)
     }
     l <- if (is.list(l)) {
