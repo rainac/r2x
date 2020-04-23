@@ -76,9 +76,10 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
     paste0(s, collapse='')
 }
 
-setattr <- function(val, alist) {
+element <- seta <- function(..., val) {
     r <- val
-    lapply(names(alist), function(n) attr(r, n) <<- alist[[n]])
+    alist <- list(...)
+    attributes(r) <- append(attributes(r), alist)
     r
 }
 
@@ -133,6 +134,31 @@ postprocess <- function(l) {
     l
 }
 
+#' Convert XML document to named list in R code
+#'
+#' Converts an XML document to a named list directly, in R source
+#' code.  This is done by naming the elements the same as the names of
+#' the list. XML attributes are mapped to R attributes.
+#'
+#' The conversion is done by an XSLT stylesheet, which is why the xslt
+#' package is required.
+#'
+#' The generated source code is also used by the x2r function, which
+#' also parses and evaluates code returning the list.
+#'
+#' @param doc XML document in parsed or text form.
+#' @return Named list representing the document, R source code.
+#' @examples
+#' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
+#' doc <- read_xml(doctext)
+#' r2x_deparse(doc)
+r2x_deparse <- function(doc) {
+    if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
+        doc <- xml2::read_xml(doc)
+    }
+    xsltproc('to-R-structure-txt.xsl', doc)
+}
+
 #' Convert XML document to named list
 #'
 #' Converts an XML document to a named list directly. This is done by
@@ -143,13 +169,13 @@ postprocess <- function(l) {
 #' package is required. The XSLT generates the R code of the document
 #' structure, which is sourced.
 #'
-#' The inverse operation is called r2x.
+#' The generated R source code is available by calling
+#' r2x_deparse. The inverse operation is called r2x.
 #'
 #' @param doc XML document in parsed or text form.
 #' @return Named list representing the document.
 #' @examples
 #' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
-#' x2r(doctext)
 #' doc <- read_xml(doctext)
 #' x2r(doc)
 x2r <- function(doc) {
