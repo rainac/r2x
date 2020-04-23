@@ -90,3 +90,17 @@ test_that("test r2x_deparse", {
 #  writeLines(y2)
   expect_true(TRUE)
 })
+
+test_that("test element", {
+  l <- element(a=1,b=2,c='test',
+               val='This is a test')
+  l <- list(a=list(),`ca:a`=1,b=2,b=list(),`ca:c`=element(version=1.2, val=l))
+  x <- r2x(l, namespace='http://example.com/xmlns/test/', namespaces=list(ca = 'http://example.com/xmlns/test/ca/'))
+#  show(x)
+  doc <- read_xml(x)
+  y1 <- x2r(x)
+#  show(doc)
+  y2 <- r2x::r2x_deparse(doc)
+#  writeLines(y2)
+  expect_true(TRUE)
+})
