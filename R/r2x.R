@@ -30,7 +30,7 @@ renderval <- function(obj) {
 #' doc <- read_xml(doctext)
 r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
     tag <- sprintf('%s', name)
-    s <- sprintf('<%s', tag, class(obj))
+    s <- sprintf('<%s', tag)
     if (!is.null(namespace)) {
         s <- c(s, sprintf(' xmlns="%s"', namespace))
     }
