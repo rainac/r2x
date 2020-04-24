@@ -1,6 +1,10 @@
 
 all: package
 
+doc:
+	Rscript -e "devtools::document(roclets = c('rd', 'collate'))"
+	$(MAKE) -C vignettes all clean
+
 package:
 	R CMD build .
 
