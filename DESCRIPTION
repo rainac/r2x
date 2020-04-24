@@ -14,3 +14,4 @@ Depends: xml2, xslt, methods
 Suggests: testthat
 RoxygenNote: 7.0.2
 Encoding: UTF-8
+BuildVignettes: no
