@@ -30,7 +30,7 @@ renderval <- function(obj) {
 #' doc <- read_xml(doctext)
 r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
     tag <- sprintf('%s', name)
-    s <- sprintf('<%s', tag, class(obj))
+    s <- sprintf('<%s', tag)
     if (!is.null(namespace)) {
         s <- c(s, sprintf(' xmlns="%s"', namespace))
     }
@@ -69,7 +69,7 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
             s <- c(s, paste0(subs, collapse=''))
         }
     } else {
-        s <- c(s, sprintf(' class="%s" %s>', class(obj), attrstr))
+        s <- c(s, sprintf(' %s>', attrstr))
         s <- c(s, renderval(obj))
     }
     s <- c(s, sprintf('</%s>', tag))
@@ -131,7 +131,7 @@ xsltcodeeval <- function(xsl, xml) {
 postprocess <- function(l) {
     atts <- attributes(l)
     if (!is.null(atts)) {
-        rem <- names(atts) %in% c('class')
+        rem <- names(atts) %in% c()
         atts <- lapply(atts[!rem], postprocess)
     }
     l <- if (is.list(l)) {
@@ -171,12 +171,17 @@ postprocess <- function(l) {
 #' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
 #' doc <- read_xml(doctext)
 #' r2x_deparse(doc)
-r2x_deparse <- function(doc) {
-    if (is.character(doc) && nchar(doc) < 1000 && file.exists(doc)) {
-        doc <- xml2::read_xml(doc)
+r2x_deparse <- function(expr, width.cutoff = 60L,
+                        backtick = mode(expr) %in% c("call", "expression", "(", "function"),
+                        control = c("keepNA", "keepInteger", "niceNames", "showAttributes"),
+                        nlines = -1L) {
+    if (is.character(expr) && nchar(expr) < 1000 && file.exists(expr)) {
+        expr <- xml2::read_xml(expr)
     }
-    xsltproc('to-R-structure-txt.xsl', doc)
+    xsltproc('to-R-structure-txt.xsl', expr)
 }
+
+setMethod('deparse', signature(expr='xml_document'), r2x_deparse)
 
 #' Convert XML document to named list
 #'

@@ -1,0 +1,107 @@
+#+title: R2X -- R to XML bridge
+#+author: Johannes Willkomm
+
+#+latex_header: \usepackage{a4wide}
+
+* Introduction
+
+#+begin_src R :session r-sess-1 :results output
+library(r2x)
+#+end_src
+
+#+RESULTS:
+
+Passing a simple named list with all scalar values results in a plain
+XML document structure:
+#+begin_src R :session r-sess-1 :results output :exports both
+read_xml(r2x(list(a=1,b=2,c='test')))
+#+end_src
+#+RESULTS:
+: {xml_document}
+: <r2x>
+: [1] <a>1</a>
+: [2] <b>2</b>
+: [3] <c>test</c>
+
+Attributes on R values are mapped to XML attributes:
+#+begin_src R :session r-sess-1 :results output :exports both
+struct <- list(a=structure(1, aa='f'),b=2,c='test', d=structure('', n=1,m=2))
+doc <- read_xml(r2x(struct))
+doc
+#+end_src
+
+#+RESULTS:
+: {xml_document}
+: <r2x>
+: [1] <a aa="f">1</a>
+: [2] <b>2</b>
+: [3] <c>test</c>
+: [4] <d n="1" m="2"/>
+
+The inverse operation is to convert an XML document back to an R
+structure
+#+begin_src R :session r-sess-1 :results output :exports both
+writeLines(deparse(x2r(doc)))
+#+end_src
+
+#+RESULTS:
+: list(a = structure(1, aa = "f"), b = 2, c = "test", d = structure("", n = 1, m = 2))
+
+While this code looks somewhat unwieldy, in particular because the
+attributes are listed after the element content in this code, the code
+that ~x2r~ generates internally is designed to appear somewhat more
+readable. This code is available via the function ~r2x_deparse~ or via
+the ~deparse~ method overload for XML documents provided by ~r2x~:
+
+#+begin_src R :session r-sess-1 :results output :exports both
+writeLines(deparse(doc))
+#+end_src
+
+#+RESULTS:
+: list(
+:       `a` = element(`aa` = 'f',
+:             val = '1'),
+:       `b` = '2',
+:       `c` = 'test',
+:       `d` = element(`n` = '1', `m` = '2')
+:     )
+
+This code uses the helper function ~element~ to create a value from
+the last argument ~val~ with attributes listed as the named preceding
+arguments. This results in a notation somewhat more resemling the XML
+code.
+
+The way is now paved to define XSLT transformations and possibly even
+entire XSLT pipelines in R. As an example consider the following R
+script which defines both the XML document and the XSLT stylesheet
+and performs the XSLT transformation
+
+#+include: tests/r2xdemo.R src R :lines "3-"
+yk
+
+This code produces as output the value of the last expression, which
+is TRUE, meaning the transformed structure is identical to the
+original one.
+
+#+RESULTS:
+: [1] TRUE
+
+However, if the suggested notation is really more convenient to use
+than the XSLT syntax in XML format remains to be seen.  While the use
+of the helper function ~element~ and careful code arrangement and
+indentation clearly goes a long way towards readability of the XSLT,
+it still looks a little bit more verbose than the XML version, it
+seems to me.
+
+* Internal      :noexport:
+
+#+name: setup-listings
+#+begin_src emacs-lisp :exports none :results silent
+  (setq org-latex-listings 'listings)
+  (setq org-latex-listings-options
+     '(
+      ("breaklines" "true")
+      ("breakatwhitespace" "true")
+      )
+     )
+#+end_src
