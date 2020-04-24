@@ -165,22 +165,47 @@ postprocess <- function(l) {
 #' The generated source code is also used by the x2r function, which
 #' also parses and evaluates code returning the list.
 #'
-#' @param doc XML document in parsed or text form.
+#' @param expr XML document to deparse.
+#' @param width.cutoff Unused argument.
+#' @param backtick Unused argument.
+#' @param control Unused argument.
+#' @param nlines Unused argument.
 #' @return Named list representing the document, R source code.
 #' @examples
 #' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
 #' doc <- read_xml(doctext)
 #' r2x_deparse(doc)
-r2x_deparse <- function(expr, width.cutoff = 60L,
-                        backtick = mode(expr) %in% c("call", "expression", "(", "function"),
-                        control = c("keepNA", "keepInteger", "niceNames", "showAttributes"),
-                        nlines = -1L) {
+r2x_deparse <- function(expr, width.cutoff = NULL, backtick = NULL, control = NULL, nlines = NULL) {
     if (is.character(expr) && nchar(expr) < 1000 && file.exists(expr)) {
         expr <- xml2::read_xml(expr)
     }
     xsltproc('to-R-structure-txt.xsl', expr)
 }
 
+#' Convert XML document to named list in R code
+#'
+#' Converts an XML document to a named list directly, in R source
+#' code.  This is done by naming the elements the same as the names of
+#' the list. XML attributes are mapped to R attributes.
+#'
+#' The conversion is done by an XSLT stylesheet, which is why the xslt
+#' package is required.
+#'
+#' The generated source code is also used by the x2r function, which
+#' also parses and evaluates code returning the list.
+#'
+#' @rdname deparse-methods
+#' @aliases deparse,xml_document-method
+#' @param expr XML document to deparse.
+#' @param width.cutoff Unused argument.
+#' @param backtick Unused argument.
+#' @param control Unused argument.
+#' @param nlines Unused argument.
+#' @return Named list representing the document, R source code.
+#' @examples
+#' doctext <- '<a><b type="int">1</b><b type="float">2.0</b></a>'
+#' doc <- read_xml(doctext)
+#' deparse(doc)
 setMethod('deparse', signature(expr='xml_document'), r2x_deparse)
 
 #' Convert XML document to named list
