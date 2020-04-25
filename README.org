@@ -136,16 +136,3 @@ of the helper function ~element~ and careful code arrangement and
 indentation clearly goes a long way towards readability of the XSLT,
 it still looks a little bit more verbose than the XML version, it
 seems to me.
-
-* Internal      :noexport:
-
-#+name: setup-listings
-#+begin_src emacs-lisp :exports none :results silent
-  (setq org-latex-listings 'listings)
-  (setq org-latex-listings-options
-     '(
-      ("breaklines" "true")
-      ("breakatwhitespace" "true")
-      )
-     )
-#+end_src
