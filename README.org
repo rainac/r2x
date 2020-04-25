@@ -68,7 +68,7 @@ writeLines(deparse(doc))
 
 This code uses the helper function ~element~ to create a value from
 the last argument ~val~ with attributes listed as the named preceding
-arguments. This results in a notation somewhat more resemling the XML
+arguments. This results in a notation somewhat more resembling the XML
 code.
 
 The way is now paved to define XSLT transformations and possibly even
