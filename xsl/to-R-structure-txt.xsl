@@ -25,7 +25,7 @@
   <xsl:template match="*[count(@*)>0]" mode="in-list">element(<xsl:for-each select="@*">
     <xsl:if test="position() > 1">, </xsl:if>`<xsl:value-of select="name()"/>` = '<xsl:value-of
       select="normalize-space(.)"/>'</xsl:for-each>,
-            val = list(<xsl:for-each select="*">
+            list(<xsl:for-each select="*">
        <xsl:if test="position() > 1">, </xsl:if>
        `<xsl:value-of select="name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>))</xsl:template>
 
@@ -37,6 +37,6 @@
               select="name()"/>` = '<xsl:value-of select="normalize-space(.)"/>'</xsl:for-each>
               <xsl:variable name="str-val" select="normalize-space(.)"/>
               <xsl:if test="string-length($str-val)">,
-            val = '<xsl:value-of select="normalize-space(.)"/>'</xsl:if>)</xsl:template>
+            '<xsl:value-of select="normalize-space(.)"/>'</xsl:if>)</xsl:template>
 
 </xsl:stylesheet>

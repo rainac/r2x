@@ -3,13 +3,13 @@
 
 #+latex_header: \usepackage{a4wide}
 
+#+PROPERTY: header-args    :eval never-export
+
 * Introduction
 
 #+begin_src R :session r-sess-1 :results output
 library(r2x)
 #+end_src
-
-#+RESULTS:
 
 Passing a simple named list with all scalar values results in a plain
 XML document structure:
@@ -47,80 +47,116 @@ writeLines(deparse(x2r(doc)))
 #+RESULTS:
 : list(a = structure(1, aa = "f"), b = 2, c = "test", d = structure("", n = 1, m = 2))
 
-While this code looks somewhat unwieldy, in particular because the
-attributes are listed after the element content in this code, the code
-that ~x2r~ generates internally is designed to appear somewhat more
-readable. This code is available via the function ~r2x_deparse~ or via
-the ~deparse~ method overload for XML documents provided by ~r2x~:
+This deparsed code looks somewhat unwieldy at first, in particular
+because the attributes are listed after the element content in this
+code. The code that ~x2r~ generates internally is designed to appear
+somewhat more readable. This code is available via the function
+~r2x_deparse~ or via the ~deparse~ method overload for XML documents
+provided by ~r2x~:
 
 #+begin_src R :session r-sess-1 :results output :exports both
 writeLines(deparse(doc))
 #+end_src
 
-#+RESULTS:
-: list(
-:       `a` = element(`aa` = 'f',
-:             val = '1'),
-:       `b` = '2',
-:       `c` = 'test',
-:       `d` = element(`n` = '1', `m` = '2')
-:     )
+The resulting code is
+
+#+begin_src R
+  r2x <- list(
+      `a` = element(`aa` = 'f',
+                    '1'),
+      `b` = '2',
+      `c` = 'test',
+      `d` = element(`n` = '1', `m` = '2')
+  )
+#+end_src
 
 This code uses the helper function ~element~ to create a value from
-the last argument ~val~ with attributes listed as the named preceding
-arguments. This results in a notation somewhat more resemling the XML
+the last argument with attributes listed as the named preceding
+arguments. This results in a notation somewhat more resembling the XML
 code.
 
-The way is now paved to define XSLT transformations and possibly even
-entire XSLT pipelines in R. As an example consider the following R
-script which defines both the XML document and the XSLT stylesheet
-and performs the XSLT transformation
+As a small example what could be done from R with the ~r2x~
+transformation, how about defining a HTML5 document in R:
 
 #+begin_src R :session r-sess-1 :results output :exports both
-copy_xsl <- element(
-    version = '1.0',
-    val = list(
-        `xsl:output` = element(
-            method = 'xml'
+    htmldef <- list(
+        head = list(
+            title = 'Test',
+            style = '
+                  h2 { color: blue; }
+                 '
         ),
-        `xsl:template` = element(
-            match = '/',
-            val = list(
-                `xsl:apply-templates` = element(
-                    select = 'node()'
-                )
+        body = list(
+            div = list(
+                h2 = 'First Section',
+                p = 'First paragraph.'
             )
-        ),
-        `xsl:template` = element(
-            match = '@*|node()',
-            val = list(
-                `xsl:copy` = list(
+        )
+    )
+
+  html <- r2x(htmldef,
+              name = 'html',
+              namespace = 'http://www.w3.org/1999/xhtml')
+
+  as.html.file <- function(html) {
+      writeLines(html, con = (outfile <- tempfile('rep', fileext = '.html')))
+      outfile
+  }
+
+  viewer <- getOption('viewer')
+  viewer(as.html.file(html))
+#+end_src
+
+The way is also paved to define XSLT transformations and possibly even
+entire XSLT pipelines in R. As an example consider the following R
+script which defines both the XML document and the XSLT stylesheet and
+performs the XSLT transformation
+
+#+begin_src R :session r-sess-1 :results output :exports both
+    copy_xsl <- element(
+        version = '1.0',
+        val = list(
+            `xsl:output` = element(
+                method = 'xml'
+            ),
+            `xsl:template` = element(
+                match = '/',
+                val = list(
                     `xsl:apply-templates` = element(
-                        select = '@*|node()'
+                        select = 'node()'
+                    )
+                )
+            ),
+            `xsl:template` = element(
+                match = '@*|node()',
+                val = list(
+                    `xsl:copy` = list(
+                        `xsl:apply-templates` = element(
+                            select = '@*|node()'
+                        )
                     )
                 )
             )
         )
     )
-)
 
-as.xslt <- function(xsldef) {
-    read_xml(r2x(xsldef,
-                 name = 'xsl:stylesheet',
-                 namespaces = list(xsl = 'http://www.w3.org/1999/XSL/Transform')))
-}
+    as.xslt <- function(xsldef) {
+        read_xml(r2x(xsldef,
+                     name = 'xsl:stylesheet',
+                     namespaces = list(xsl = 'http://www.w3.org/1999/XSL/Transform')))
+    }
 
-example_xml <- element(a=1,b=2,c=3,
-                       val=list(
-                           e1 = element(a=2,b=3,c=4,
-                                        val=list(e2 = element(a=2,b=3,c=4)))))
+    example_xml <- element(a=1,b=2,c=3,
+                           val=list(
+                               e1 = element(a=2,b=3,c=4,
+                                            val=list(e2 = element(a=2,b=3,c=4)))))
 
-xslt_doc <- as.xslt(copy_xsl)
-xml_doc <- read_xml(r2x(example_xml))
-result <- xml_xslt(xml_doc, xslt_doc)
+    xslt_doc <- as.xslt(copy_xsl)
+    xml_doc <- read_xml(r2x(example_xml))
+    result <- xml_xslt(xml_doc, xslt_doc)
 
-identical(r2x_deparse(xml_doc),
-          r2x_deparse(result))
+    identical(r2x_deparse(xml_doc),
+              r2x_deparse(result))
 #+end_src
 
 This code produces as output the value of the last expression, which
@@ -130,9 +166,13 @@ original one.
 #+RESULTS:
 : [1] TRUE
 
-However, if the suggested notation is really more convenient to use
-than the XSLT syntax in XML format remains to be seen.  While the use
-of the helper function ~element~ and careful code arrangement and
-indentation clearly goes a long way towards readability of the XSLT,
-it still looks a little bit more verbose than the XML version, it
-seems to me.
+Both examples are arguably quite technical. I certainly do not
+recomment writing XSL or HTML5 directly from R in this way. What R2X
+is potentially much more useful for, is to generate the bits in pieces
+of XML data that are needed when generating dynamic documents from a
+template. There, you would have a template such as a HTML or
+OpenOffice document such as an invoice, plus a XSLT stylesheet that
+injects dynamic information into such a document. The dynamic info
+that the transformation needs is some adhoc XML format that can be
+easily generated from whatever DB script. Exactly this could be done
+with R and R2X too, and quite conveniently.
