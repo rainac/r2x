@@ -1,6 +1,7 @@
 library('testthat')
 library('xml2')
 library('r2x')
+library('base64enc')
 
 context('r2x/test-html.R')
 
