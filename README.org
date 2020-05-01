@@ -168,7 +168,7 @@ original one.
 
 Both examples are arguably quite technical. I certainly do not
 recomment writing XSL or HTML5 directly from R in this way. What R2X
-is potentially much more useful for, is to generate the bits in pieces
+is potentially much more useful for, is to generate the bits and pieces
 of XML data that are needed when generating dynamic documents from a
 template. There, you would have a template such as a HTML or
 OpenOffice document such as an invoice, plus a XSLT stylesheet that
