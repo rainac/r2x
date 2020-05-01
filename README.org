@@ -3,6 +3,8 @@
 
 #+latex_header: \usepackage{a4wide}
 
+#+PROPERTY: header-args    :eval never-export
+
 * Introduction
 
 #+begin_src R :session r-sess-1 :results output
@@ -45,27 +47,31 @@ writeLines(deparse(x2r(doc)))
 #+RESULTS:
 : list(a = structure(1, aa = "f"), b = 2, c = "test", d = structure("", n = 1, m = 2))
 
-While this code looks somewhat unwieldy, in particular because the
-attributes are listed after the element content in this code, the code
-that ~x2r~ generates internally is designed to appear somewhat more
-readable. This code is available via the function ~r2x_deparse~ or via
-the ~deparse~ method overload for XML documents provided by ~r2x~:
+This deparsed code looks somewhat unwieldy at first, in particular
+because the attributes are listed after the element content in this
+code. The code that ~x2r~ generates internally is designed to appear
+somewhat more readable. This code is available via the function
+~r2x_deparse~ or via the ~deparse~ method overload for XML documents
+provided by ~r2x~:
 
 #+begin_src R :session r-sess-1 :results output :exports both
 writeLines(deparse(doc))
 #+end_src
 
-#+RESULTS:
-: list(
-:       `a` = element(`aa` = 'f',
-:             val = '1'),
-:       `b` = '2',
-:       `c` = 'test',
-:       `d` = element(`n` = '1', `m` = '2')
-:     )
+The resulting code is
+
+#+begin_src R
+  r2x <- list(
+      `a` = element(`aa` = 'f',
+                    '1'),
+      `b` = '2',
+      `c` = 'test',
+      `d` = element(`n` = '1', `m` = '2')
+  )
+#+end_src
 
 This code uses the helper function ~element~ to create a value from
-the last argument ~val~ with attributes listed as the named preceding
+the last argument with attributes listed as the named preceding
 arguments. This results in a notation somewhat more resembling the XML
 code.
 
