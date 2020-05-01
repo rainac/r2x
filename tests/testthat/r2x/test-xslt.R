@@ -9,13 +9,13 @@ test_that("test r2x xslt transform", {
 
     copy_xsl <- element(
         version = '1.0',
-        val = list(
+        list(
             `xsl:output` = element(
                 method = 'xml'
             ),
             `xsl:template` = element(
                 match = '/',
-                val = list(
+                list(
                     `xsl:apply-templates` = element(
                         select = 'node()'
                     )
@@ -23,7 +23,7 @@ test_that("test r2x xslt transform", {
             ),
             `xsl:template` = element(
                 match = '@*|node()',
-                val = list(
+                list(
                     `xsl:copy` = list(
                         `xsl:apply-templates` = element(
                             select = '@*|node()'
@@ -41,9 +41,9 @@ test_that("test r2x xslt transform", {
     }
 
     example_xml <- element(a=1,b=2,c=3,
-                           val=list(
+                           list(
                                e1 = element(a=2,b=3,c=4,
-                                            val=list(e2 = element(a=2,b=3,c=4)))))
+                                            list(e2 = element(a=2,b=3,c=4)))))
 
     xslt_doc <- as.xslt(copy_xsl)
     xml_doc <- read_xml(r2x(example_xml))
@@ -51,6 +51,10 @@ test_that("test r2x xslt transform", {
 
     expect_true(identical(r2x_deparse(xml_doc),
                           r2x_deparse(result)))
+
+    # The same
+    expect_true(identical(deparse(xml_doc),
+                          deparse(result)))
 
     expect_true(identical(example_xml,
                           x2r(result)))

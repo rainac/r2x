@@ -21,7 +21,7 @@ test_that("test HTML5 doc", {
     htmldef <- element(
         lang = 'en',
         style = 'font-family: sans-serif',
-        val = list(
+        list(
             head = list(
                 title = 'Test',
                 style = '
@@ -36,14 +36,14 @@ test_that("test HTML5 doc", {
                     p = 'First paragraph.',
                     div = element(
                         style = 'text-align: center',
-                        val = list(
+                        list(
                             img = element(
                                 width='72%',
                                 src = sprintf('data:image/png;base64,%s', imgdata)
                             ),
                             p = element(
                                 style = 'font-style: italic',
-                                val = 'Figure caption.')
+                                'Figure caption.')
                         )
                     )
                 ),
