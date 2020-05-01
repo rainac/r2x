@@ -1,3 +1,5 @@
+library('testthat')
+
 context('all tests')
 
 test_that('r2x works', {
