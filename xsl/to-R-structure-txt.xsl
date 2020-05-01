@@ -14,37 +14,29 @@
   </xsl:template>
 
   <xsl:template match="*">
-    <xsl:value-of select="local-name()"/> &lt;- <xsl:apply-templates select="." mode="in-list"/>
+    <xsl:value-of select="name()"/> &lt;- <xsl:apply-templates select="." mode="in-list"/>
   </xsl:template>
 
-  <xsl:template match="*" mode="in-list">
-    list(<xsl:for-each select="*">
+  <xsl:template match="*" mode="in-list">list(<xsl:for-each select="*">
       <xsl:if test="position() > 1">, </xsl:if>
-      `<xsl:value-of select="local-name()"/>` = <xsl:apply-templates select="." mode="in-list"/>
-      </xsl:for-each>
-    )
-  </xsl:template>
+      `<xsl:value-of select="name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>
+    )</xsl:template>
 
-  <xsl:template match="*[count(@*)>0]" mode="in-list">
-    setattr(list(<xsl:for-each select="*">
+  <xsl:template match="*[count(@*)>0]" mode="in-list">element(<xsl:for-each select="@*">
+    <xsl:if test="position() > 1">, </xsl:if>`<xsl:value-of select="name()"/>` = '<xsl:value-of
+      select="normalize-space(.)"/>'</xsl:for-each>,
+            list(<xsl:for-each select="*">
        <xsl:if test="position() > 1">, </xsl:if>
-       `<xsl:value-of select="local-name()"/>` = <xsl:apply-templates select="." mode="in-list"/>
-      </xsl:for-each>), list(
-      <xsl:for-each select="@*">
-        <xsl:if test="position() > 1">, </xsl:if>
-        `<xsl:value-of select="local-name()"/>` = '<xsl:value-of select="normalize-space(.)"/>'
-      </xsl:for-each>))
-  </xsl:template>
+       `<xsl:value-of select="name()"/>` = <xsl:apply-templates select="." mode="in-list"/></xsl:for-each>))</xsl:template>
 
   <xsl:template match="*[count(*)=0]"
                 mode="in-list">'<xsl:value-of select="normalize-space(.)"/>'</xsl:template>
 
-  <xsl:template match="*[count(*)=0 and count(@*)>0]" mode="in-list">
-    setattr('<xsl:value-of select="normalize-space(.)"/>', list(
-    <xsl:for-each select="@*">
-      <xsl:if test="position() > 1">, </xsl:if> `<xsl:value-of
-       select="local-name()"/>` = '<xsl:value-of select="normalize-space(.)"/>'</xsl:for-each>
-    ))
-  </xsl:template>
+  <xsl:template match="*[count(*)=0 and count(@*)>0]" mode="in-list">element(<xsl:for-each select="@*">
+              <xsl:if test="position() > 1">, </xsl:if>`<xsl:value-of
+              select="name()"/>` = '<xsl:value-of select="normalize-space(.)"/>'</xsl:for-each>
+              <xsl:variable name="str-val" select="normalize-space(.)"/>
+              <xsl:if test="string-length($str-val)">,
+            '<xsl:value-of select="normalize-space(.)"/>'</xsl:if>)</xsl:template>
 
 </xsl:stylesheet>

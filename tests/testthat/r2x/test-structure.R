@@ -28,7 +28,7 @@ test_that("test inv r2x", {
     k1 <- x2r(x)
     # show(k1)
 
-    expect_true(attr(k1, 'version') == '1.0')
+    expect_true(attr(k1, 'version') == 1.0)
     expect_true(all(names(k1) == c('a', 'b', 'c')))
 })
 
