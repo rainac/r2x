@@ -93,9 +93,17 @@ r2x <- function(obj, name='r2x', namespace = NULL, namespaces = list()) {
 #'  l <- element(a=1,b=2,c='test',
 #'               val='This is a test')
 element <- seta <- function(..., val) {
-    if (missing(val)) val <- ''
-    r <- val
     alist <- list(...)
+    if (missing(val)) {
+        if (is.na(names(alist)[[length(alist)]])
+            || nchar(names(alist)[[length(alist)]]) == 0) {
+            val <- alist[[length(alist)]]
+            alist <- alist[-length(alist)]
+        } else {
+            val <- ''
+        }
+    }
+    r <- val
     attributes(r) <- append(attributes(r), alist)
     r
 }
