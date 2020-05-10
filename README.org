@@ -1,6 +1,8 @@
 #+title: R2X -- R to XML bridge
 #+author: Johannes Willkomm
 
+#+latex_header: \usepackage[utf8]{inputenc}
+#+latex_header: \usepackage{lmodern}
 #+latex_header: \usepackage{a4wide}
 
 #+PROPERTY: header-args    :eval never-export
@@ -166,13 +168,24 @@ original one.
 #+RESULTS:
 : [1] TRUE
 
-Both examples are arguably quite technical. I certainly do not
-recomment writing XSL or HTML5 directly from R in this way. What R2X
-is potentially much more useful for, is to generate the bits and pieces
-of XML data that are needed when generating dynamic documents from a
+Both examples are arguably quite technical. It certainly is not
+recommendable to write XSL or HTML5 directly from R in this way. What
+R2X is potentially much more useful for, is for accessing information
+from XML documents and to generate the bits and pieces of XML data
+that are needed when generating dynamic documents from a
 template. There, you would have a template such as a HTML or
 OpenOffice document such as an invoice, plus a XSLT stylesheet that
 injects dynamic information into such a document. The dynamic info
 that the transformation needs is some adhoc XML format that can be
 easily generated from whatever DB script. Exactly this could be done
 with R and R2X too, and quite conveniently.
+
+** Limitations
+
+Currently, R2X can only handle XML documents where any meaningful text
+node is a leaf in the tree. That is, text nodes that are siblings with
+elements are ignored by the ~x2r~ transformation. In our experience,
+XML documents often tend to have this leaf-text structure, which has
+the advantage that they can be reformatted, and pretty-printed with
+indentation, among others. As a counter example, HTML is not in
+leaf-text form in general.
