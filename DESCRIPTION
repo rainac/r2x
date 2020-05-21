@@ -1,15 +1,13 @@
 Package: r2x
-Title: R2X - R to XML bridge
-Version: 1.0.30
+Title: R2X - R to XML Bridge
+Version: 1.2.0
 Authors@R: person("Johannes", "Willkomm", email = "johannes@johannes-willkomm.de",
   role = c("aut", "cre"))
 Maintainer: Johannes Willkomm <johannes@johannes-willkomm.de>
 License: GPL-3
-Description: R2X is a simple R to XML bridge. Named lists are
- converted to XML elements by the r2x function. Attributes are
- converted to XML attributes. Values are rendered as attributes when
- they are plain values. XML documents are converted to named lists by
- the x2r function.
+Description: Simple R to XML bridge, function r2x converts named lists
+ to XML elements. Attributes are converted to XML attributes. The x2r
+ function converts XML documents to named lists.
 Depends: xml2, xslt, methods
 Suggests: testthat, base64enc
 RoxygenNote: 7.0.2
