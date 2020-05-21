@@ -1,11 +1,20 @@
 
 all: package
 
+inst-files:
+	rm -rf inst
+	mkdir -p inst/doc
+	$(MAKE) inst/doc/r2x-introduction.pdf
+	mkdir -p inst/tests/testthat
+	mkdir -p inst/xsl
+	cp -v xsl/* inst/xsl
+	cp -v tests/testthat.R inst/tests/
+	cp -rv tests/testthat/r2x inst/tests/testthat/
+
 doc:
 	Rscript -e "devtools::document(roclets = c('rd', 'collate'))"
-	$(MAKE) -C vignettes all clean
 
-package:
+package: inst-files
 	R CMD build .
 
 install: package
