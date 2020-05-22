@@ -39,7 +39,7 @@ pipeline {
 
     stage('build') {
       steps {
-        sh 'cd r2x && git checkout dev -- Makefile'
+        sh 'cd r2x && git checkout origin/dev -- Makefile'
         sh 'cd r2x && make package'
 
         sh 'ls -l'
