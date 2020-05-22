@@ -1,5 +1,5 @@
 #+title: R2X -- R to XML bridge
-#+author: Johannes Willkomm
+#+author: AI & IT UG (haftungsbeschränkt)
 
 #+latex_header: \usepackage[utf8]{inputenc}
 #+latex_header: \usepackage{lmodern}
