@@ -1,7 +1,7 @@
 
 FROM debian:buster
 
-RUN echo "test" > /etc/hostname
+RUN echo "r2x-builder" > /etc/hostname
 
 RUN apt-get update -y
 RUN apt-get upgrade -y
