@@ -27,7 +27,7 @@ pipeline {
                   doGenerateSubmoduleConfigurations: false,
                   extensions: [
                                [$class: 'CleanBeforeCheckout'],
-                               [$class: 'RelativeTargetDirectory', relativeTargetDir: 'RUOP']
+                               [$class: 'RelativeTargetDirectory', relativeTargetDir: 'r2x']
                                ],
                   submoduleCfg: [],
                   userRemoteConfigs: [[credentialsId: 'joy-fs', url: 'famserv:git/r2x']]])
