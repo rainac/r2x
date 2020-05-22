@@ -14,7 +14,7 @@ inst-files:
 doc:
 	Rscript -e "devtools::document(roclets = c('rd', 'collate'))"
 
-package: inst-files
+package:
 	R CMD build .
 
 install: package
