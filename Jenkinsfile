@@ -1,6 +1,6 @@
 pipeline {
   parameters {
-    string(name: 'LDFLAGS', defaultValue: '', description: '')
+    string(name: 'BUILDID', defaultValue: '', description: 'Unused')
   }
   agent {
     dockerfile {
