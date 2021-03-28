@@ -3,6 +3,8 @@ renderval <- function(obj) {
               sprintf('%s', obj)
           } else if (is.numeric(obj)) {
               sprintf('%.16g', obj)
+          } else if (is.function(obj)) {
+              sprintf('%s', deparse(obj))
           } else {
               sprintf('%s', obj)
           }, collapse=' ')
