@@ -1,6 +1,6 @@
 Package: r2x
 Title: R2X - R to XML Bridge
-Version: 1.2.0
+Version: 1.2.2
 Authors@R: person("Johannes", "Willkomm", email = "johannes@johannes-willkomm.de",
   role = c("aut", "cre"))
 Maintainer: Johannes Willkomm <johannes@johannes-willkomm.de>
