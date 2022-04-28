@@ -1,6 +1,7 @@
 pipeline {
   parameters {
     string(name: 'BUILDID', defaultValue: '', description: 'Unused')
+    string(name: 'branch', defaultValue: 'master', description: 'Unused')
   }
   agent {
     dockerfile {
@@ -23,14 +24,15 @@ pipeline {
         sh 'env|sort'
 
         checkout([$class: 'GitSCM',
-                  branches: [[name: "*/master"]],
+                  branches: [[name: "*/$branch"]],
                   doGenerateSubmoduleConfigurations: false,
                   extensions: [
                                [$class: 'CleanBeforeCheckout'],
+                               [$class: 'LocalBranch', localBranch: '**'],
                                [$class: 'RelativeTargetDirectory', relativeTargetDir: 'r2x']
                                ],
                   submoduleCfg: [],
-                  userRemoteConfigs: [[credentialsId: 'joy-fs', url: 'famserv:git/r2x']]])
+                  userRemoteConfigs: [[credentialsId: 'joy-fs', url: "$GIT_URL"]]])
 
         sh 'ls -l'
         sh 'ls -l r2x'
@@ -39,9 +41,7 @@ pipeline {
 
     stage('build') {
       steps {
-        sh 'cd r2x && git checkout origin/dev -- Makefile'
         sh 'cd r2x && make package'
-
         sh 'ls -l'
         sh 'ls -l r2x'
       }
@@ -49,7 +49,14 @@ pipeline {
 
     stage('pack') {
       steps {
-        archiveArtifacts 'r2x/r2x_*.tar.gz'
+        dir("r2x") {
+          sh 'env | sort | grep GIT_            > buildinfo.txt'
+          sh "echo 'branch=$branch'            >> buildinfo.txt"
+          sh 'git rev-parse HEAD               >> buildinfo.txt'
+          sh 'git rev-parse --abbrev-ref HEAD  >> buildinfo.txt'
+          archiveArtifacts 'buildinfo.txt'
+          archiveArtifacts 'r2x_*.tar.gz'
+        }
       }
     }
   }
